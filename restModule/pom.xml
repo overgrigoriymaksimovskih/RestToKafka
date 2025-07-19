@@ -31,6 +31,12 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+    <!-- Spring Kafka -->
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
+    </dependency>
+
     <!-- Для того, чтобы idea смогла считать переменные из .env-->
     <dependency>
       <groupId>io.github.cdimascio</groupId>

@@ -1,15 +1,21 @@
 package com.grigoriy.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Message {
+    @JsonProperty("id")
     private Integer id;
+    @JsonProperty("text")
     private String text;
+    @JsonProperty("userId")
     private Integer userId;
 
     public Message( String text, Integer userId) {
         this.text = text;
         this.userId = userId;
     }
+
 
     public Integer getId() {
         return id;

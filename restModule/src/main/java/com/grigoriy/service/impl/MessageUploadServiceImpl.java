@@ -5,21 +5,27 @@ import com.grigoriy.service.MessageUploadService;
 
 import java.util.List;
 
+import com.grigoriy.utils.MessageJsonConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Component
 public class MessageUploadServiceImpl implements MessageUploadService {
 
-    private final RestTemplate restTemplate;
-    private final String uploadUrl = "http://localhost:8086/upload";
+
+    private final MessageJsonConverter messageJsonConverter;
+//    private final String uploadUrl = "http://localhost:8086/upload";
 //    private final String uploadUrl = "${spring.rabbitmq.queues.login}";
+    private final KafkaMessageProducer kafkaMessageProducer;
     @Autowired
-    public MessageUploadServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public MessageUploadServiceImpl(MessageJsonConverter messageJsonConverter, KafkaMessageProducer kafkaMessageProducer) {
+        this.messageJsonConverter = messageJsonConverter;
+        this.kafkaMessageProducer = kafkaMessageProducer;
     }
+
+
+
     @Override
     public String uploadUsers(List<Message> messages) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -28,32 +34,12 @@ public class MessageUploadServiceImpl implements MessageUploadService {
         int totalCount = messages.size();
 
         for (Message message : messages) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            HttpEntity<Message> requestEntity = new HttpEntity<>(message, headers);
-
             try {
-                ResponseEntity<String> responseEntity = restTemplate.exchange(
-                        uploadUrl,
-                        HttpMethod.POST,
-                        requestEntity,
-                        String.class);
+                kafkaMessageProducer.sendMessage(messageJsonConverter.convertJsonToUserString(message));
+                successCount++;
+            } catch (IllegalArgumentException e) {
 
-                HttpStatus statusCode = (HttpStatus) responseEntity.getStatusCode();
-
-                if (statusCode.is2xxSuccessful()) {
-                    successCount++;
-                } else {
-                    String errorMessage = "Error in dataModuleConsumer " + message;
-                    errorStringBuilder.append(errorMessage).append("; "); // Добавляем ошибку в StringBuilder
-                    System.err.println(errorMessage);
-                    //Можно добавить обработку, например, повторную отправку
-                }
-            } catch (Exception e) {
-                String errorMessage = "Error uploading message: " + message + ", Error: " + e.getMessage();
-                errorStringBuilder.append(errorMessage).append("; "); // Добавляем ошибку в StringBuilder
-                System.err.println(errorMessage);
+                errorStringBuilder.append("Error on pass message [" + message.getText() + "] to kafka topic");
             }
         }
         stringBuilder.append(successCount);
@@ -66,5 +52,6 @@ public class MessageUploadServiceImpl implements MessageUploadService {
         }
 
         return stringBuilder.toString();
+
     }
 }
