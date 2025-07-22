@@ -23,7 +23,7 @@ public class Message {
     private Integer userId;
 
     public Message() {
-        // Конструктор без аргументов (обязателен для ЖПА и Jackson)
+        // Конструктор без аргументов (обязателен для JPA и Jackson)
     }
 
     public Message(String text) {

@@ -11,11 +11,15 @@ public class KafkaMessageProducer {
     @Value("${kafka.topic}")
     String topicName;
 
-    @Autowired
+
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendMessage(String message) {
+    public KafkaMessageProducer( KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public void sendMessage(String message, String userId) {
         System.out.println("Sending message to Kafka: " + message);
-        kafkaTemplate.send(topicName, message);
+        kafkaTemplate.send(topicName, userId, message);
     }
 }

@@ -1,11 +1,8 @@
 package com.grigoriy.utils;
 
 import com.grigoriy.entity.Message;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class MessageJsonConverter {
@@ -14,7 +11,7 @@ public class MessageJsonConverter {
 
     public Message convertJsonToMessage(String jsonString) throws IllegalArgumentException {
         try {
-            // Используем objectMapper.readValue для десериализации JSON в объект Message.
+            // objectMapper.readValue для десериализации JSON в объект Message.
             return objectMapper.readValue(jsonString, Message.class);
         } catch (Exception e) {
             throw new IllegalArgumentException("Не удалось преобразовать JSON-строку в объект Message: " + e.getMessage(), e);

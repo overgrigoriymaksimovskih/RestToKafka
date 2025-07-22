@@ -10,12 +10,6 @@ import java.util.Random;
 public class MessageGenerator {
     public List<Message> generateRandomMessages(int count, int userId) {
 
-//        у меня есть сервис который обрабатывает и присылает сообщения от пользователей
-//        (ид пользователя и сообщение) и второй сервис который принимает сообщения
-//        и записывает их в БД все работает через рест контроллер. я хочу сделать это через
-//        кафку так чтобы в базу записывалось не больше 1 сообщения в секунду от одного
-//        пользователя и не больше 10 сообщений от всех пользователей в секунду
-
         List<Message> messages = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < count; i++) {

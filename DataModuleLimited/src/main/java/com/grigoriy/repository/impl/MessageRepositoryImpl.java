@@ -8,32 +8,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class MessageRepositoryImpl implements MessageRepository {
+
     private final MessageDAO messageDAO;
 
     public MessageRepositoryImpl(MessageDAO messageDAO) {
         this.messageDAO = messageDAO;
     }
 
-
     @Transactional
     @Override
     public String saveMessage(Message message) {
         try {
             messageDAO.save(message);
-            return "Message was saved succcessful";
+            return "Message saved successful";
         } catch (Exception e) {
-            System.err.println("Error during saving message: " + e.getMessage());
-            return "Error during saving message: " + e.getMessage();
+            System.err.println("Error with saving to DB (saveMessage): " + e.getMessage());
+            return "Error with saving to DB (saveMessage): " + e.getMessage();
         }
     }
-
-//    @PostConstruct
-//    private void createuser(){
-//        List<User> users = new ArrayList<>();
-//        users.add(new User("firstUserFromArray"));
-//
-//
-//        System.out.println(saveUsers(users));
-//    }
-
 }

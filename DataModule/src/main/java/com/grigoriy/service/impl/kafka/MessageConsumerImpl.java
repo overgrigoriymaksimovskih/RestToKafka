@@ -8,14 +8,12 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.grigoriy.entity.Message;
-import java.util.List;
 
 @Component
 public class MessageConsumerImpl implements MessageConsumer {
 
-    private final MessageRepository messageRepository; // Ваш репозиторий для сохранения пользователей
+    private final MessageRepository messageRepository;
     private final MessageJsonConverter messageJsonConverter;
-    private final String REQUEST_TOPIC = "user-requests";
 
     @Autowired
     public MessageConsumerImpl(MessageRepository messageRepository, MessageJsonConverter messageJsonConverter) {
@@ -25,7 +23,7 @@ public class MessageConsumerImpl implements MessageConsumer {
 
     // Kafka Listener - получает сообщения из Kafka и сразу их обрабатывает
     @Override
-    @KafkaListener(topics = REQUEST_TOPIC, groupId = "user-processing-group")
+    @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.consumer.group-id}")
     public void listen(String message) {
         try {
             processMessage(message); // Обрабатываем каждое входящее сообщение
@@ -38,11 +36,11 @@ public class MessageConsumerImpl implements MessageConsumer {
     }
 
     @Override
-    public void processMessage(String message) {
+    public void processMessage(String messageStr) {
         try {
             System.out.println("Saving message to database.");
-            Message messages = messageJsonConverter.convertJsonToMessage(message);
-            messageRepository.saveUsers(messages);
+            Message message = messageJsonConverter.convertJsonToMessage(messageStr);
+            messageRepository.saveMessage(message);
         } catch (Exception e) {
             System.err.println("Error saving to database: " + e.getMessage());
             e.printStackTrace();
