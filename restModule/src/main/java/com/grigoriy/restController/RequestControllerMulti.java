@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class RequestController {
+public class RequestControllerMulti {
     private final MessageGenerator messageGenerator;
     private final MessageUploadService messageUploadService;
 
-    public RequestController(MessageGenerator userGenerator, MessageUploadService messageUploadService) {
+    public RequestControllerMulti(MessageGenerator userGenerator, MessageUploadService messageUploadService) {
         this.messageGenerator = userGenerator;
         this.messageUploadService = messageUploadService;
     }
 
-    @GetMapping("${api.restmodule.endpoint.upload}")
+    @GetMapping("${api.restmodule.endpoint.upload.multi}")
     @ResponseBody
     public String sendUsers(
             @RequestParam(value = "count", defaultValue = "10") int count,
@@ -27,8 +27,8 @@ public class RequestController {
 //        return "HAHAHHAAH";
 
         List<Message> messages = messageGenerator.generateRandomMessages(count, userId);
-        String uploadResult = messageUploadService.uploadUsers(messages);
-
+        String uploadResult = messageUploadService.uploadUsersMulti(messages);
+//
         return uploadResult;
     }
 }

@@ -13,12 +13,13 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     String bootStrapServer;
 
-//    @Value("${kafka.topic}")
-//    String topicName;
-//    @Bean
-//    public KafkaAdmin kafkaAdmin() {
-//        Map<String, Object> configs = new HashMap<>();
-//        configs.put(org.apache.kafka.clients.admin.AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServer);
-//        return new KafkaAdmin(configs);
-//    }
+    @Value("${kafka.topic}")
+    String topicName;
+    @Bean
+    public KafkaAdmin kafkaAdmin() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(org.apache.kafka.clients.admin.AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServer);
+        return new KafkaAdmin(configs);
+    }
+    // слушатель все равно пытается подписаться на топик, указанный в kafka.topic, и если этого топика не существует, Kafka автоматически его создаст.
 }

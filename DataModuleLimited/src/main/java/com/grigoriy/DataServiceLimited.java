@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories("com.grigoriy.*")
 @EntityScan("com.grigoriy.*")
 @ComponentScan("com.grigoriy.*")
-@EnableScheduling //нужна чтобы каждые n секунд дергать очередь кафки и спрашивать ЕСТЬ ЧЕ?
+@EnableScheduling //нужна чтобы каждые n секунд дергать рэдис и спрашивать ЕСТЬ ЧЕ?
 @SpringBootApplication
 public class DataServiceLimited
 {

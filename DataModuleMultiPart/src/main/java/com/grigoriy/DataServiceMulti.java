@@ -12,9 +12,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan("com.grigoriy.*")
 @EnableScheduling //нужна чтобы каждые n секунд дергать рэдис и спрашивать ЕСТЬ ЧЕ?
 @SpringBootApplication
-public class DataService
+public class DataServiceMulti
 {
     public static void main(String[] args) {
-        SpringApplication.run(DataService.class);
+        SpringApplication.run(DataServiceMulti.class);
     }
 }

@@ -9,7 +9,7 @@ public class MessageJsonConverter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String convertJsonToUserString(Message message) throws IllegalArgumentException {
+    public String convertMessageToJsonString(Message message) throws IllegalArgumentException {
         try {
             return objectMapper.writeValueAsString(message);
         } catch (Exception e) {

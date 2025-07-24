@@ -13,10 +13,12 @@ public class MessageUploadServiceImpl implements MessageUploadService {
 
     private final MessageJsonConverter messageJsonConverter;
     private final KafkaMessageProducer kafkaMessageProducer;
+    private final KafkaMessageProducerMulti kafkaMessageProducerMulti;
     @Autowired
-    public MessageUploadServiceImpl(MessageJsonConverter messageJsonConverter, KafkaMessageProducer kafkaMessageProducer) {
+    public MessageUploadServiceImpl(MessageJsonConverter messageJsonConverter, KafkaMessageProducer kafkaMessageProducer, KafkaMessageProducerMulti kafkaMessageProducerMulti) {
         this.messageJsonConverter = messageJsonConverter;
         this.kafkaMessageProducer = kafkaMessageProducer;
+        this.kafkaMessageProducerMulti = kafkaMessageProducerMulti;
     }
 
 
@@ -29,7 +31,36 @@ public class MessageUploadServiceImpl implements MessageUploadService {
 
         for (Message message : messages) {
             try {
-                kafkaMessageProducer.sendMessage(messageJsonConverter.convertJsonToUserString(message), message.getUserId().toString());
+                kafkaMessageProducer.sendMessage(messageJsonConverter.convertMessageToJsonString(message), message.getUserId().toString());
+                successCount++;
+            } catch (IllegalArgumentException e) {
+
+                errorStringBuilder.append("Error on pass message [" + message.getText() + "] to kafka topic");
+            }
+        }
+        stringBuilder.append(successCount);
+        stringBuilder.append(" of ");
+        stringBuilder.append(totalCount);
+        stringBuilder.append(" messages were sent successfully. ");
+
+        if (errorStringBuilder.length() > 0) {
+            stringBuilder.append("Errors: ").append(errorStringBuilder.toString());
+        }
+
+        return stringBuilder.toString();
+
+    }
+
+    @Override
+    public String uploadUsersMulti(List<Message> messages) {
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder errorStringBuilder = new StringBuilder();
+        int successCount = 0;
+        int totalCount = messages.size();
+
+        for (Message message : messages) {
+            try {
+                kafkaMessageProducerMulti.sendMessage(messageJsonConverter.convertMessageToJsonString(message), message.getUserId().toString());
                 successCount++;
             } catch (IllegalArgumentException e) {
 

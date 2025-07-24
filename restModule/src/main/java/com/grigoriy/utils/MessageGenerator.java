@@ -20,7 +20,7 @@ public class MessageGenerator {
     }
 
     private String generateRandomText(Random random, int iteration) {
-        int nameLength = random.nextInt(8) + 2; // Длина имени от 2 до 9 символов
+        int nameLength = random.nextInt(15); // Длина имени от 15 до 15 символов
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nameLength; i++) {
             char randomChar = (char) (random.nextInt(26) + 'a'); // Случайная буква от 'a' до 'z'

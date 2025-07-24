@@ -10,11 +10,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories("com.grigoriy.*")
 @EntityScan("com.grigoriy.*")
 @ComponentScan("com.grigoriy.*")
-@EnableScheduling //нужна чтобы каждые n секунд дергать рэдис и спрашивать ЕСТЬ ЧЕ?
+@EnableScheduling //нужна чтобы каждые n секунд дергать редис и спрашивать ЕСТЬ ЧЕ?
 @SpringBootApplication
-public class DataService
+public class DataServiceCached
 {
     public static void main(String[] args) {
-        SpringApplication.run(DataService.class);
+        SpringApplication.run(DataServiceCached.class);
     }
 }

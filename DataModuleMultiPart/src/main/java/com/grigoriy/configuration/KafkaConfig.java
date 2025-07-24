@@ -15,7 +15,7 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     String bootStrapServer;
 
-    @Value("${kafka.topic}")
+    @Value("${kafka.topic.multi}")
     String topicName;
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -24,12 +24,11 @@ public class KafkaConfig {
         return new KafkaAdmin(configs);
     }
 
-//    @Bean
-//    public NewTopic userRequestsTopic() {
-//        return TopicBuilder.name(topicName)
-//                .partitions(1)
-//                .replicas(1)
-//                .build();
-//    }
-    // слушатель все равно пытается подписаться на топик, указанный в kafka.topic, и если этого топика не существует, Kafka автоматически его создаст.
+    @Bean
+    public NewTopic myTopic() {
+        return TopicBuilder.name(topicName)
+                .partitions(6)  // Указываем 6 партиций
+                .replicas(1)    // Указываем фактор репликации (замените на подходящий для вашей среды)
+                .build();
+    }
 }

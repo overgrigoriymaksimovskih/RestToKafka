@@ -6,20 +6,21 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KafkaMessageProducer {
+public class KafkaMessageProducerMulti {
 
-    @Value("${kafka.topic}")
+    @Value("${kafka.topic.multi}")
     String topicName;
 
 
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaMessageProducer( KafkaTemplate<String, String> kafkaTemplate) {
+    public KafkaMessageProducerMulti( KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void sendMessage(String message, String userId) {
+        String key = String.valueOf(userId);
         System.out.println("Sending message to Kafka: " + message);
-        kafkaTemplate.send(topicName, message);
+        kafkaTemplate.send(topicName, userId, message);
     }
 }
