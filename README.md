@@ -17,7 +17,7 @@ Docker для контейнеров Kafka, Redis, Postgres
 (bitnami/kafka:1.1.1-r267, bitnami/zookeeper:3.5.5-r43, redis:5.0.14, postgres:14.5) 
 (в БД должна быть создана таблица )
 
-Кейс 1 (restModule, dataModule):
+-- Кейс 1 (restModule, dataModule):
 Задача: Организовать передачу сообщений через топик Kafka.
 
 - restModule: Обращение на ендпоинт :8087/send-messages?count=*&userId=*
@@ -27,7 +27,7 @@ Docker для контейнеров Kafka, Redis, Postgres
 - dataModule: Слушает топик "user-requests" записывает все сообщения по очереди в БД
 
 
-Кейс 2 (restModule, dataModuleLimited):
+-- Кейс 2 (restModule, dataModuleLimited):
 Задача: Представим, что БД имеет лимит = 1запись/секунду. Если в очереди перед сообщением от
 user_id=3 уже есть по сто сообщений от user_id=2 и user_id=1 он будет вынужден ждать 200 сек
 пока его сообщение будет обработано. Необходимо обрабатывать сообщения поочередно для каждого
@@ -45,7 +45,7 @@ user_id=3 уже есть по сто сообщений от user_id=2 и user_
 отказе одного из серверов редиса, сообщения не будут потеряны.
 
 
-Кейс 3 (restModule, dataModuleMultiPart):
+-- Кейс 3 (restModule, dataModuleMultiPart):
 Задача: Разбить топик на партиции и обработать их паралельно.
 
 - restModule: Обращения на ендпоинты :8087/send-messages?count=*&userId=*
@@ -58,10 +58,10 @@ user_id=3 уже есть по сто сообщений от user_id=2 и user_
 свою партицию паралельно с другими экземплярами.
 
 
-Кейс 4 (dataModuleCached):
+-- Кейс 4 (dataModuleCached):
 Задача: Организовать кеш ответов для популярных запросов к БД.
 
-dataModuleCached: Обращение на ендпоинт :8086/getDb?messageId=* вернет сообщение с id=* из БД 
+- dataModuleCached: Обращение на ендпоинт :8086/getDb?messageId=* вернет сообщение с id=* из БД 
 и запишет его в Redis с временем жизни в кеше = 30 сек. 
 Обращение на ендпоинт :8086//getCached?messageId=* вернет сообщение с id=* из Redis и обновит 
 его время жизни
