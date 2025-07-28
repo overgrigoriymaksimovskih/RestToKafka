@@ -45,7 +45,7 @@ services:
     #   timeout: 10s
     #   retries: 3
     networks:
-      - kafka-net
+      - kafka-network
 
   redis:
     image: redis:5.0.14
