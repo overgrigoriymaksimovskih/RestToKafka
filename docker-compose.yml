@@ -77,11 +77,11 @@ services:
     restart: unless-stopped
 
   datamodulelimited:
-    container_name: dataModuleLimited
+    container_name: datamodulelimited
     restart: on-failure
     build:
       context: ./
-      dockerfile: ./dataModuleLimited/Dockerfile
+      dockerfile: ./datamodulelimited/Dockerfile
     environment:
       JPA_DDL_AUTO: ${JPA_DDL_AUTO}
       POSTGRES_URL: ${POSTGRES_URL}
@@ -102,11 +102,11 @@ services:
       - kafka-network
 
   restmodule:
-    container_name: restModule
+    container_name: restmodule
     restart: on-failure
     build:
       context: ./
-      dockerfile: ./restModule/Dockerfile
+      dockerfile: ./restmodule/Dockerfile
     ports:
       - ${REST_SERVICE_PORT}:${REST_SERVICE_PORT}
     environment:
