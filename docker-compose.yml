@@ -1,4 +1,3 @@
-version: '3.9'
 
 volumes:
   zookeeper-data:
@@ -11,8 +10,8 @@ volumes:
     driver: local
 
 networks:
-  kafka-net:
-    name: kafka-net
+  kafka-network:
+    driver: bridge  # или другой подходящий драйвер сети
 
 services:
   zookeeper:
