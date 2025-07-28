@@ -12,10 +12,10 @@
   </parent>
 
   <groupId>com.grigoriy</groupId>
-  <artifactId>dataModuleMultiPart</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>dataModuleMultiPart</name>
-  <description>data-module-multi-part</description>
+  <artifactId>dataModule</artifactId>
+  <version>0.0.1</version>
+  <name>dataModule</name>
+  <description>data-module</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

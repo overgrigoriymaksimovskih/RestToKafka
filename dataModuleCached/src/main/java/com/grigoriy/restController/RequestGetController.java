@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class RequestDataController {
+public class RequestGetController {
     MessageRepository messageRepository;
-    public RequestDataController(MessageRepository messageRepository) {
+    public RequestGetController(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 

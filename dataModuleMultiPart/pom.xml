@@ -12,10 +12,10 @@
   </parent>
 
   <groupId>com.grigoriy</groupId>
-  <artifactId>dataModuleCached</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>dataModuleCached</name>
-  <description>data-module-cached</description>
+  <artifactId>dataModuleMultiPart</artifactId>
+  <version>0.0.1</version>
+  <name>dataModuleMultiPart</name>
+  <description>data-module-multi-part</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

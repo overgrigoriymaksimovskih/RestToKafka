@@ -1,0 +1,128 @@
+version: '3.9'
+
+volumes:
+  zookeeper-data:
+    driver: local
+  kafka-data:
+    driver: local
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+
+networks:
+  kafka-net:
+    name: kafka-net
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:3.5.5-r43
+    container_name: zookeeper
+    ports:
+      - ${ZOOKEEPER_PORT_MAPPING}
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - kafka-network
+
+  kafka:
+    image: bitnami/kafka:1.1.1-r267
+    container_name: kafka
+    ports:
+      - ${KAFKA_PORT_MAPPING}
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_SERVERS}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      ALLOW_PLAINTEXT_LISTENER: yes
+      KAFKA_CFG_DELETE_TOPIC_ENABLE: "true" # Note the string quotes here!
+    depends_on:
+      - zookeeper  # Add zookeeper dependency
+    # Optional: Healthcheck (if you want to ensure Kafka is healthy before other services start)
+    # healthcheck:
+    #   test: ["CMD-SHELL", "/opt/bitnami/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper:2181 | grep -q '.'"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    networks:
+      - kafka-net
+
+  redis:
+    image: redis:5.0.14
+    container_name: redis
+    ports:
+      - ${REDIS_PORT_MAPPING}
+    #   test: ["CMD", "redis-cli", "ping"]
+    #   interval: 30s
+    #   timeout #Определить сеть
+
+  postgres-db:
+    container_name: postgres-db
+    hostname: postgres
+    image: postgres:14.5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT_MAPPING}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d ${POSTGRES_DATABASE} -h 127.0.0.1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  dataModuleLimited:
+    container_name: dataModuleLimited
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: ./dataModuleLimited/Dockerfile
+    environment:
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO}
+      POSTGRES_URL: ${POSTGRES_URL:jdbc:postgresql}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REST_DATAMODULE_PORT: ${REST_DATAMODULE_PORT}
+      KAFKA_CONSUMER_GROUP_ID: ${KAFKA_CONSUMER_GROUP_ID}
+      KAFKA_AUTO_OFFSET_RESET: ${KAFKA_AUTO_OFFSET_RESET}
+      KAFKA_SERVERS: ${KAFKA_SERVERS}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - kafka
+      - postgres-db
+      - redis
+    networks:
+      - kafka-network
+
+  restModule:
+    container_name: restModule
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: ./restModule/Dockerfile
+    ports:
+      - ${REST_SERVICE_PORT}:${REST_SERVICE_PORT}
+    environment:
+      REST_SERVICE_PORT: ${REST_SERVICE_PORT}
+      KAFKA_CONSUMER_GROUP_ID: ${KAFKA_CONSUMER_GROUP_ID}
+      KAFKA_AUTO_OFFSET_RESET: ${KAFKA_AUTO_OFFSET_RESET}
+      KAFKA_SERVERS: ${KAFKA_SERVERS}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '3'
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - kafka-network

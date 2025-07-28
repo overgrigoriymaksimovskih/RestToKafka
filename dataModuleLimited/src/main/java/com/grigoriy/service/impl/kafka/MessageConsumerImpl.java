@@ -16,7 +16,7 @@ public class MessageConsumerImpl implements MessageConsumer {
     }
 
     @Override
-    @KafkaListener(topics = "${kafka.topic}", groupId = "${kafka.consumer.group-id}")
+    @KafkaListener(topics = "${kafka.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(String message) {
         try {
             if(message != null){
