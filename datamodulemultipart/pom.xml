@@ -12,9 +12,9 @@
   </parent>
 
   <groupId>com.grigoriy</groupId>
-  <artifactId>dataModuleMultiPart</artifactId>
+  <artifactId>datamodulemultipart</artifactId>
   <version>0.0.1</version>
-  <name>dataModuleMultiPart</name>
+  <name>datamodulemultipart</name>
   <description>data-module-multi-part</description>
 
   <properties>

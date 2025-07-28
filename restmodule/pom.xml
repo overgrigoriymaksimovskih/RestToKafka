@@ -12,9 +12,9 @@
   </parent>
 
   <groupId>com.grigoriy</groupId>
-  <artifactId>restModule</artifactId>
+  <artifactId>restmodule</artifactId>
   <version>0.0.1</version>
-  <name>restModule</name>
+  <name>restmodule</name>
   <description>rest-module</description>
 
   <properties>

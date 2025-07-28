@@ -12,10 +12,10 @@
   </parent>
 
   <groupId>com.grigoriy</groupId>
-  <artifactId>dataModule</artifactId>
+  <artifactId>datamodulelimited</artifactId>
   <version>0.0.1</version>
-  <name>dataModule</name>
-  <description>data-module</description>
+  <name>datamodulelimited</name>
+  <description>data-module-limited</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
