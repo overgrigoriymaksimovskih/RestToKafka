@@ -76,7 +76,7 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  dataModuleLimited:
+  datamodulelimited:
     container_name: dataModuleLimited
     restart: on-failure
     build:
@@ -101,7 +101,7 @@ services:
     networks:
       - kafka-network
 
-  restModule:
+  restmodule:
     container_name: restModule
     restart: on-failure
     build:
