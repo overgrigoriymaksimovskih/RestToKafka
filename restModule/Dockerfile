@@ -19,9 +19,9 @@ RUN mkdir -p $HOME/restmodule
 # **Сейчас наш пом.хмл лежит на нашем компе относительно этого докер файла в ./dispatcher/pom.xml**
 # Говорим докеру чтобы он скопировал его отсюда в свой контейнер в папку которую мы создали на предыдущем шаге для
 # нашего модуля "dataModule"
-ADD ./restModule/pom.xml $HOME/restmodule
+ADD ./restmodule/pom.xml $HOME/restmodule
 # Аналогично копируем директорию срц в папку с нашим модулем внутри докер контейнера
-ADD ./restModule/src $HOME/restmodule/src
+ADD ./restmodule/src $HOME/restmodule/src
 
 # Запускаем МАВЕН --debug. Параметры перед ним:
 # clean package стандартная команда Maven для очистки (удаления предыдущих сборок) и сборки проекта
