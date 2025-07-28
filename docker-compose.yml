@@ -85,7 +85,7 @@ services:
       dockerfile: ./dataModuleLimited/Dockerfile
     environment:
       JPA_DDL_AUTO: ${JPA_DDL_AUTO}
-      POSTGRES_URL: ${POSTGRES_URL:jdbc:postgresql}
+      POSTGRES_URL: ${POSTGRES_URL}
       POSTGRES_USERNAME: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       REST_DATAMODULE_PORT: ${REST_DATAMODULE_PORT}
