@@ -14,25 +14,25 @@ ENV MVN_SETTINGS=/usr/share/maven/ref/settings.xml
 
 # Создим директорию внутри контейнера.  В которую потом положим исходный код нашего модуля (dataModule)
 # (не знаю важно ли чтобы директория называлась так же как наш АртефактИД. На всякий случай пусть будет 1 в 1).
-RUN mkdir -p $HOME/dataModuleCached
+RUN mkdir -p $HOME/datamodulecached
 # ***Начинаем складывать исходный код в только что созданную директорию внутри докер контейнера***
 # **Сейчас наш пом.хмл лежит на нашем компе относительно этого докер файла в ./dispatcher/pom.xml**
 # Говорим докеру чтобы он скопировал его отсюда в свой контейнер в папку которую мы создали на предыдущем шаге для
 # нашего модуля "dataModule"
-ADD ./dataModuleCached/pom.xml $HOME/dataModuleCached
+ADD ./datamodulecached/pom.xml $HOME/datamodulecached
 # Аналогично копируем директорию срц в папку с нашим модулем внутри докер контейнера
-ADD ./dataModuleCached/src $HOME/dataModuleCached/src
+ADD ./dataMmodulecached/src $HOME/datamodulecached/src
 
 # Запускаем МАВЕН --debug. Параметры перед ним:
 # clean package стандартная команда Maven для очистки (удаления предыдущих сборок) и сборки проекта
 # -s $MVN_SETTINGS указывает Maven, какой файл settings.xml использовать.(Указываем переменую окружения созданную раньше)
 # В результате будет создан наш джар в папке $HOME/dataModule/target/dataModule-0.0.1.jar
 # !!!!! dataModule-0.0.1.jar формируется из Артифакт ИД + вершн из ПОМ.хмл
-RUN mvn -f $HOME/dataModuleCached/pom.xml -s $MVN_SETTINGS clean package --debug
+RUN mvn -f $HOME/datamodulecached/pom.xml -s $MVN_SETTINGS clean package --debug
 
 # Запускаем наш джарник.
 # Все предыдущие команды выполняются однажды при сборке контейнера, а эта при каждом старте контейнера.
-CMD java -jar $HOME/dataModuleCached/target/dataModuleCached-0.0.1.jar
+CMD java -jar $HOME/datamodulecached/target/datamodulecached-0.0.1.jar
 
 # Если наше приложение зависит от какой то библиотеки которая тоже лежит у нас на компе нужно ее тоже добавить в
 # соответствующую директорию и скомпилировать ее в ждарник  и добавить в в локальный Maven-репозиторий (внутри контейнера)
