@@ -24,12 +24,19 @@
     <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     <postgresql.version>42.2.18</postgresql.version>
     <io.github.cdimascio.version>3.0.0</io.github.cdimascio.version>
+    <dbcp2.version>2.9.0</dbcp2.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -60,6 +67,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+
+    <!-- Alternative connection pool -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>${dbcp2.version}</version>
     </dependency>
 
   </dependencies>
