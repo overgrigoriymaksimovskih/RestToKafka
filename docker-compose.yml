@@ -25,12 +25,6 @@ services:
       - zookeeper-data:/var/lib/zookeeper/data
     networks:
       - kafka-network
-    healthcheck:
-      test: [ "CMD", "/opt/bitnami/zookeeper/bin/zkCli.sh", "-server", "localhost:2181", "stat" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
     restart: unless-stopped
 
   kafka:
@@ -48,8 +42,7 @@ services:
     volumes:
       - kafka-data:/var/lib/kafka/data
     depends_on:
-      zookeeper:
-          condition: service_healthy
+      - zookeeper
     networks:
       - kafka-network
     healthcheck: # Добавил healthcheck! Очень важно!
@@ -107,9 +100,12 @@ services:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
     depends_on:
-      - kafka
-      - postgres-db
-      - redis
+      kafka:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - kafka-network
     restart: unless-stopped
@@ -133,7 +129,7 @@ services:
         max-size: '100m'
         max-file: '3'
     depends_on:
-      postgres-db:
+      kafka:
         condition: service_healthy
     networks:
       - kafka-network
