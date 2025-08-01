@@ -45,12 +45,6 @@ services:
       - zookeeper
     networks:
       - kafka-network
-    healthcheck: # Добавил healthcheck! Очень важно!
-      test: [ "CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
     restart: unless-stopped
 
   redis:
@@ -100,12 +94,9 @@ services:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
     depends_on:
-      kafka:
-        condition: service_healthy
-      postgres-db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - kafka
+      - postgres-db
+      - redis
     networks:
       - kafka-network
     restart: unless-stopped
@@ -129,8 +120,9 @@ services:
         max-size: '100m'
         max-file: '3'
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres-db
+      - redis
     networks:
       - kafka-network
     restart: unless-stopped
