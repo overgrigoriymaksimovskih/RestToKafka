@@ -11,7 +11,7 @@ volumes:
 
 networks:
   kafka-network:
-    driver: bridge  # или другой подходящий драйвер сети
+    driver: bridge
 
 services:
   zookeeper:
@@ -21,8 +21,17 @@ services:
       - ${ZOOKEEPER_PORT_MAPPING}
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
     networks:
       - kafka-network
+    healthcheck:
+      test: [ "CMD", "sh", "-c", "echo stat | nc localhost 2181" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
 
   kafka:
     image: bitnami/kafka:1.1.1-r267
@@ -31,30 +40,34 @@ services:
       - ${KAFKA_PORT_MAPPING}
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: ${KAFKA_SERVERS}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       ALLOW_PLAINTEXT_LISTENER: yes
-      KAFKA_CFG_DELETE_TOPIC_ENABLE: "true" # Note the string quotes here!
+      KAFKA_CFG_DELETE_TOPIC_ENABLE: "true"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
     depends_on:
-      - zookeeper  # Add zookeeper dependency
-    # Optional: Healthcheck (if you want to ensure Kafka is healthy before other services start)
-    # healthcheck:
-    #   test: ["CMD-SHELL", "/opt/bitnami/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper:2181 | grep -q '.'"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+      - zookeeper:
+          condition: service_healthy
     networks:
       - kafka-network
+    healthcheck: # Добавил healthcheck! Очень важно!
+      test: [ "CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
 
   redis:
     image: redis:5.0.14
     container_name: redis
     ports:
       - ${REDIS_PORT_MAPPING}
-    #   test: ["CMD", "redis-cli", "ping"]
-    #   interval: 30s
-    #   timeout #Определить сеть
+    volumes:
+      - redis-data:/var/lib/redis/data
+    restart: unless-stopped
 
   postgres-db:
     container_name: postgres-db
@@ -69,7 +82,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DATABASE}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d ${POSTGRES_DATABASE} -h 127.0.0.1" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME} -d ${POSTGRES_DATABASE} -h localhost" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -78,7 +91,6 @@ services:
 
   datamodulelimited:
     container_name: datamodulelimited
-    restart: on-failure
     build:
       context: ./
       dockerfile: ./datamodulelimited/Dockerfile
@@ -100,10 +112,10 @@ services:
       - redis
     networks:
       - kafka-network
+    restart: unless-stopped
 
   restmodule:
     container_name: restmodule
-    restart: on-failure
     build:
       context: ./
       dockerfile: ./restmodule/Dockerfile
@@ -125,3 +137,4 @@ services:
         condition: service_healthy
     networks:
       - kafka-network
+    restart: unless-stopped
