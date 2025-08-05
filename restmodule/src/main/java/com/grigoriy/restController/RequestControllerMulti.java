@@ -24,11 +24,9 @@ public class RequestControllerMulti {
     public String sendUsers(
             @RequestParam(value = "count", defaultValue = "10") int count,
             @RequestParam(value = "userId", defaultValue = "1") int userId){
-//        return "HAHAHHAAH";
 
         List<Message> messages = messageGenerator.generateRandomMessages(count, userId);
         String uploadResult = messageUploadService.uploadUsersMulti(messages);
-//
         return uploadResult;
     }
 }

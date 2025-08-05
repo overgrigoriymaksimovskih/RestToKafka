@@ -20,8 +20,10 @@ public class MessageRepositoryImpl implements MessageRepository {
     public String saveMessage(Message message) {
         try {
             messageDAO.save(message);
+            //Тут, конечно, бестпрактис надо вернуть ид сохраненной сущности...
             return "Message saved successful";
         } catch (Exception e) {
+            //Тут, конечно, 100% надо записать ошибку в лог и выкинуть ее, чтобы транзакция откатилась...
             System.err.println("Error with saving to DB (saveMessage): " + e.getMessage());
             return "Error with saving to DB (saveMessage): " + e.getMessage();
         }

@@ -16,12 +16,4 @@ public class MessageJsonConverter {
             throw new IllegalArgumentException("Cant cast JSON-string to object Message: " + e.getMessage(), e);
         }
     }
-//    public String convertMessageToUserString(Message message) throws IllegalArgumentException {
-//        try {
-//            return objectMapper.writeValueAsString(message);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error converting message to JSON", e);
-//        }
-//    }
-
 }

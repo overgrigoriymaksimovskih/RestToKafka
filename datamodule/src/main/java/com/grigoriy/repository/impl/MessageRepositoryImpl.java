@@ -20,20 +20,12 @@ public class MessageRepositoryImpl implements MessageRepository {
     public String saveMessage(Message message) {
         try {
             messageDAO.save(message);
+            //Тут, конечно, бестпрактис надо вернуть ид сохраненной сущности...
             return "Message was saved succcessful";
         } catch (Exception e) {
+            //Тут, конечно, 100% надо записать ошибку в лог и выкинуть ее, чтобы транзакция откатилась...
             System.err.println("Error during saving message: " + e.getMessage());
             return "Error during saving message: " + e.getMessage();
         }
     }
-
-//    @PostConstruct
-//    private void createuser(){
-//        List<User> users = new ArrayList<>();
-//        users.add(new User("firstUserFromArray"));
-//
-//
-//        System.out.println(saveUsers(users));
-//    }
-
 }

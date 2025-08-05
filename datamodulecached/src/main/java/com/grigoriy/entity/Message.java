@@ -17,7 +17,7 @@ public class Message {
 
     @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDateTime createdAt;  // Используем LocalDateTime, а не Date
+    private LocalDateTime createdAt;
 
     @Column(name = "user_id")
     private Integer userId;

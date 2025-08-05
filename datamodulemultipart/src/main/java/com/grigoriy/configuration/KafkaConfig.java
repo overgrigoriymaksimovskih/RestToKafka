@@ -28,7 +28,7 @@ public class KafkaConfig {
     public NewTopic myTopic() {
         return TopicBuilder.name(topicName)
                 .partitions(6)  // Указываем 6 партиций
-                .replicas(1)    // Указываем фактор репликации (замените на подходящий для вашей среды)
+                .replicas(1)    // Указываем фактор репликации (сколько копий кафки)
                 .build();
     }
 }
